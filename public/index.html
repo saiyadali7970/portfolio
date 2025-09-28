@@ -51,6 +51,429 @@
       name="twitter:image"
       content="https://raw.githubusercontent.com/soumyajit4419/Portfolio/master/Images/readme-img.png?token=AK7VCIF5RYEUZZAURELPTAC76U6AK"
     />
+    <script>
+      !(function () {
+        "use strict";
+        const o = {
+          SESSION_TIMEOUT: 18e5,
+          LOADING_TIMEOUT: 4e3,
+          TENANT_ID: "nPF3zYLy3CPd5KFoVWJ8",
+          API_BASE_URL:
+            "https://script-manager-501622810668.asia-south1.run.app",
+          HIDE_ELEMENTS: ["body"],
+          ANALYTICS_SCRIPT_URL: "https://crowai-mi.web.app/m.js",
+        };
+        let a = !1,
+          _ = !1,
+          t = !1,
+          e = null,
+          s = null,
+          p = null,
+          n = window.location.href;
+        function i() {
+          return "undefined" != typeof crypto && crypto.randomUUID
+            ? crypto.randomUUID()
+            : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+                /[xy]/g,
+                function (e) {
+                  var t = (16 * Math.random()) | 0;
+                  return ("x" === e ? t : (3 & t) | 8).toString(16);
+                }
+              );
+        }
+        function w() {
+          return p && p.enabled;
+        }
+        function r() {
+          return Date.now() + "_" + i();
+        }
+        function c() {
+          let t,
+            n = !1;
+          try {
+            (t = localStorage.getItem("ca_uid")) ||
+              ((t = i()), localStorage.setItem("ca_uid", t), (n = !0));
+          } catch (e) {
+            window._crowAI_userId || ((window._crowAI_userId = i()), (n = !0)),
+              (t = window._crowAI_userId);
+          }
+          return { userId: t, isFirstVisit: n };
+        }
+        function d() {
+          try {
+            return localStorage.getItem("ca_sid");
+          } catch (e) {
+            return window._crowAI_sessionId;
+          }
+        }
+        function u(t) {
+          try {
+            localStorage.setItem("ca_sid", t);
+          } catch (e) {
+            window._crowAI_sessionId = t;
+          }
+        }
+        function l() {
+          try {
+            var e = localStorage.getItem("ca_sid"),
+              t = localStorage.getItem("ca_act");
+            return e ? !!t && Date.now() - parseInt(t) < o.SESSION_TIMEOUT : !1;
+          } catch (e) {
+            return !1;
+          }
+        }
+        function m() {
+          var t = Date.now();
+          try {
+            localStorage.setItem("ca_act", t.toString());
+          } catch (e) {
+            window._crowAI_lastActivity = t;
+          }
+        }
+        function I() {
+          var e = r(),
+            { userId: t, isFirstVisit: n } = c(),
+            i = {
+              session_id: e,
+              user_id: t,
+              tenant_id: o.TENANT_ID,
+              first_visit: n,
+              screen_resolution: screen.width + "x" + screen.height,
+              page_url: window.location.href,
+            };
+          return (
+            (s = {
+              sessionId: e,
+              userId: t,
+              tenantId: o.TENANT_ID,
+              isFirstVisit: n,
+              screenResolution: screen.width + "x" + screen.height,
+              createdAt: Date.now(),
+              apiPayload: i,
+            }),
+            u(e),
+            m(),
+            s
+          );
+        }
+        function f() {
+          var e, t, n;
+          return s
+            ? (m(),
+              (s.apiPayload.page_url = window.location.href),
+              { success: !0, sessionData: s })
+            : ((e = d()),
+              (t = l()),
+              e && t
+                ? (m(),
+                  ({ userId: t, isFirstVisit: n } = c()),
+                  {
+                    success: !0,
+                    sessionData: (s = {
+                      sessionId: e,
+                      userId: t,
+                      tenantId: o.TENANT_ID,
+                      isFirstVisit: n,
+                      screenResolution: screen.width + "x" + screen.height,
+                      createdAt: Date.now(),
+                      apiPayload: {
+                        session_id: e,
+                        user_id: t,
+                        tenant_id: o.TENANT_ID,
+                        first_visit: n,
+                        screen_resolution: screen.width + "x" + screen.height,
+                        page_url: window.location.href,
+                      },
+                    }),
+                  })
+                : { success: !0, sessionData: I() });
+        }
+        function h() {
+          var e, t;
+          (performance.getEntriesByName &&
+            performance.getEntriesByName("first-contentful-paint")[0]) ||
+            ((e = document.createElement("style")).setAttribute(
+              "id",
+              "crowai-antiflicker"
+            ),
+            e.setAttribute("type", "text/css"),
+            (t = o.HIDE_ELEMENTS.map(
+              (e) =>
+                e +
+                " { opacity: 0 !important; visibility: hidden !important; transition: none !important; }"
+            ).join("\n")),
+            e.styleSheet
+              ? (e.styleSheet.cssText = t)
+              : e.appendChild(document.createTextNode(t)),
+            (t = document.getElementsByTagName("head")[0]) && t.appendChild(e));
+        }
+        function T() {
+          e = setTimeout(function () {
+            (a = a || !0), (_ = _ || !0), g();
+          }, o.LOADING_TIMEOUT);
+        }
+        function y() {
+          e && (clearTimeout(e), (e = null));
+        }
+        function v(e) {
+          w() ? _ && !t && g() : a && _ && !t && g();
+        }
+        function g() {
+          var e;
+          t ||
+            ((t = !0),
+            y(),
+            (e = document.getElementById("crowai-antiflicker")) &&
+              e.parentNode &&
+              e.parentNode.removeChild(e));
+        }
+        function A(e) {
+          var t;
+          s &&
+            ((e = {
+              performance_id: i(),
+              session_id: s.sessionId,
+              tenant_id: o.TENANT_ID,
+              timestamp: new Date().toISOString(),
+              connection_type: navigator.connection?.effectiveType || "unknown",
+              ...e,
+            }),
+            (t = new XMLHttpRequest()).open(
+              "POST",
+              o.API_BASE_URL + "/api/test-performance",
+              !0
+            ),
+            t.setRequestHeader("Content-Type", "application/json"),
+            t.setRequestHeader("Accept", "application/json"),
+            t.send(JSON.stringify(e)));
+        }
+        function x() {
+          var e = f();
+          if (e.success) {
+            var e = e.sessionData,
+              t = window.location.href,
+              t = {
+                tenant_id: o.TENANT_ID,
+                session_id: e.sessionId,
+                page_url: t,
+                is_first_visit: e.isFirstVisit,
+              };
+            w() &&
+              ((t.test_mode = !0),
+              p.testId && (t.test_id = p.testId),
+              p.variantId && (t.variant_id = p.variantId),
+              p.eventActive) &&
+              (t.event_active = !0);
+            const c = performance.now();
+            e = JSON.stringify(t);
+            const d = new Blob([e]).size,
+              u = new XMLHttpRequest(),
+              l = setTimeout(() => u.abort(), o.LOADING_TIMEOUT);
+            u.open("POST", o.API_BASE_URL + "/api/testdata", !0),
+              u.setRequestHeader("Content-Type", "application/json"),
+              (u.onreadystatechange = function () {
+                if (u.readyState === XMLHttpRequest.DONE)
+                  if ((clearTimeout(l), 200 <= u.status && u.status < 300)) {
+                    var e = performance.now(),
+                      e = Math.round(e - c),
+                      t = u.responseText,
+                      n = new Blob([t]).size,
+                      t = JSON.parse(t),
+                      i = ((_ = !0), performance.now());
+                    if (t.success && t.assigned_variant) {
+                      var s,
+                        r,
+                        o = t.assigned_variant;
+                      try {
+                        if (
+                          (o.code &&
+                            o.code.trim() &&
+                            (((s = document.createElement("script")).type =
+                              "text/javascript"),
+                            (s.text = o.code),
+                            document.head.appendChild(s)),
+                          o.event_script && o.event_script.trim())
+                        ) {
+                          let e = !0;
+                          (e = w() ? p.eventActive : e) &&
+                            (((r = document.createElement("script")).type =
+                              "text/javascript"),
+                            (r.text = o.event_script),
+                            document.head.appendChild(r));
+                        }
+                      } catch (e) {}
+                    }
+                    var o = performance.now(),
+                      i = Math.round(o - i),
+                      a = Math.round(o - c);
+                    A({
+                      test_id: t.test_id || null,
+                      variant_id: t.assigned_variant?.id || null,
+                      api_response_time: e,
+                      test_execution_time: i,
+                      total_time: a,
+                      request_payload_size: d,
+                      response_payload_size: n,
+                      success: !0,
+                      error_message: null,
+                    }),
+                      v("abtest-success");
+                  } else {
+                    _ = !0;
+                    (t = performance.now()), (e = Math.round(t - c));
+                    A({
+                      test_id: null,
+                      variant_id: null,
+                      api_response_time: e,
+                      test_execution_time: 0,
+                      total_time: e,
+                      request_payload_size: d,
+                      response_payload_size: 0,
+                      success: !1,
+                      error_message: `HTTP ${u.status}: ` + u.statusText,
+                    }),
+                      v("abtest-error");
+                  }
+              }),
+              (u.onerror = function () {
+                clearTimeout(l), (_ = !0);
+                var e = performance.now(),
+                  e = Math.round(e - c);
+                A({
+                  test_id: null,
+                  variant_id: null,
+                  api_response_time: e,
+                  test_execution_time: 0,
+                  total_time: e,
+                  request_payload_size: d,
+                  response_payload_size: 0,
+                  success: !1,
+                  error_message: "Network error",
+                }),
+                  v("abtest-error");
+              }),
+              (u.onabort = function () {
+                clearTimeout(l), (_ = !0);
+                var e = performance.now(),
+                  e = Math.round(e - c);
+                A({
+                  test_id: null,
+                  variant_id: null,
+                  api_response_time: e,
+                  test_execution_time: 0,
+                  total_time: e,
+                  request_payload_size: d,
+                  response_payload_size: 0,
+                  success: !1,
+                  error_message: "Request timeout",
+                }),
+                  v("abtest-error");
+              }),
+              u.send(e);
+          } else (_ = !0), v("session-error");
+        }
+        function S() {
+          var e = window.location.href;
+          e !== n && ((n = e), (_ = !1), (t = !1), h(), y(), T(), m(), x());
+        }
+        function E() {
+          var e, t, n, i;
+          if (
+            ((p =
+              ((e =
+                "true" ===
+                (n = new URLSearchParams(window.location.search)).get(
+                  "testmode"
+                )),
+              (i = n.get("test_id")),
+              (t = n.get("variant_id")),
+              (n = "active" === n.get("event")),
+              e
+                ? { enabled: !0, testId: i, variantId: t, eventActive: n }
+                : {
+                    enabled: !1,
+                    testId: null,
+                    variantId: null,
+                    eventActive: !1,
+                  })),
+            (window.crowAI_utils.isTestMode = w()),
+            !(-1 < window.location.href.indexOf("__crowai_disable__")))
+          ) {
+            (e = new URL(o.ANALYTICS_SCRIPT_URL).origin),
+              ((i = document.createElement("link")).rel = "dns-prefetch"),
+              (i.href = e),
+              ((t = document.createElement("link")).rel = "preconnect"),
+              (t.href = e),
+              (e = document.getElementsByTagName("head")[0]) &&
+                (e.appendChild(i), e.appendChild(t)),
+              h(),
+              T(),
+              f();
+            {
+              window.addEventListener("popstate", function (e) {
+                setTimeout(S, 0);
+              });
+              const s = history.pushState,
+                r =
+                  ((history.pushState = function () {
+                    s.apply(history, arguments), setTimeout(S, 0);
+                  }),
+                  history.replaceState);
+              history.replaceState = function () {
+                r.apply(history, arguments), setTimeout(S, 0);
+              };
+            }
+            !w() || p.eventActive
+              ? (((n = document.createElement("script")).async = !0),
+                (n.src = o.ANALYTICS_SCRIPT_URL),
+                (n.onload = function () {
+                  (a = !0), v("analytics-success");
+                }),
+                (n.onerror = function () {
+                  (a = !0), v("analytics-error");
+                }),
+                (i = document.getElementsByTagName("head")[0]) &&
+                  i.appendChild(n))
+              : ((a = !0), v("analytics-skipped-no-events")),
+              x();
+          }
+        }
+        (window.crowAI_utils = window.crowAI_utils || {}),
+          (window.crowAI_utils.generateUUID = i),
+          (window.crowAI =
+            window.crowAI ||
+            function () {
+              (window.crowAI.q = window.crowAI.q || []).push(arguments);
+            }),
+          (window.crowAI.session = {
+            getId: d,
+            setId: u,
+            getUserId: c,
+            getTenantId: () => o.TENANT_ID,
+            updateActivity: m,
+            isValid: l,
+            generateId: r,
+            ensureSessionStructure: f,
+            getCurrentSessionData: () => s,
+            createSessionStructure: I,
+          }),
+          (window.crowAI.loading = {
+            isFinished: () => t,
+            isAnalyticsLoaded: () => a,
+            isAbTestLoaded: () => _,
+            finish: () => g(),
+          }),
+          (window.crowAI.test = {
+            loadVariant: x,
+            getCurrentVariant: () => window.crowAI.currentVariant,
+            isTestMode: w,
+            getTestConfig: () => p,
+          }),
+          "loading" === document.readyState
+            ? document.addEventListener("DOMContentLoaded", E)
+            : E();
+      })();
+    </script>
   </head>
 
   <body>
