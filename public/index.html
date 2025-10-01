@@ -54,12 +54,11 @@
     <script>
       !(function () {
         "use strict";
-        const o = {
+        const r = {
           SESSION_TIMEOUT: 18e5,
           LOADING_TIMEOUT: 4e3,
           TENANT_ID: "nPF3zYLy3CPd5KFoVWJ8",
-          API_BASE_URL:
-            "https://script-manager-501622810668.asia-south1.run.app",
+          API_BASE_URL: "https://api.crowai.co/delivery",
           HIDE_ELEMENTS: ["body"],
           ANALYTICS_SCRIPT_URL: "https://crowai-mi.web.app/m.js",
         };
@@ -84,7 +83,7 @@
         function w() {
           return p && p.enabled;
         }
-        function r() {
+        function o() {
           return Date.now() + "_" + i();
         }
         function c() {
@@ -117,7 +116,7 @@
           try {
             var e = localStorage.getItem("ca_sid"),
               t = localStorage.getItem("ca_act");
-            return e ? !!t && Date.now() - parseInt(t) < o.SESSION_TIMEOUT : !1;
+            return e ? !!t && Date.now() - parseInt(t) < r.SESSION_TIMEOUT : !1;
           } catch (e) {
             return !1;
           }
@@ -131,12 +130,12 @@
           }
         }
         function I() {
-          var e = r(),
+          var e = o(),
             { userId: t, isFirstVisit: n } = c(),
             i = {
               session_id: e,
               user_id: t,
-              tenant_id: o.TENANT_ID,
+              tenant_id: r.TENANT_ID,
               first_visit: n,
               screen_resolution: screen.width + "x" + screen.height,
               page_url: window.location.href,
@@ -145,7 +144,7 @@
             (s = {
               sessionId: e,
               userId: t,
-              tenantId: o.TENANT_ID,
+              tenantId: r.TENANT_ID,
               isFirstVisit: n,
               screenResolution: screen.width + "x" + screen.height,
               createdAt: Date.now(),
@@ -172,14 +171,14 @@
                     sessionData: (s = {
                       sessionId: e,
                       userId: t,
-                      tenantId: o.TENANT_ID,
+                      tenantId: r.TENANT_ID,
                       isFirstVisit: n,
                       screenResolution: screen.width + "x" + screen.height,
                       createdAt: Date.now(),
                       apiPayload: {
                         session_id: e,
                         user_id: t,
-                        tenant_id: o.TENANT_ID,
+                        tenant_id: r.TENANT_ID,
                         first_visit: n,
                         screen_resolution: screen.width + "x" + screen.height,
                         page_url: window.location.href,
@@ -197,7 +196,7 @@
               "crowai-antiflicker"
             ),
             e.setAttribute("type", "text/css"),
-            (t = o.HIDE_ELEMENTS.map(
+            (t = r.HIDE_ELEMENTS.map(
               (e) =>
                 e +
                 " { opacity: 0 !important; visibility: hidden !important; transition: none !important; }"
@@ -210,7 +209,7 @@
         function T() {
           e = setTimeout(function () {
             (a = a || !0), (_ = _ || !0), g();
-          }, o.LOADING_TIMEOUT);
+          }, r.LOADING_TIMEOUT);
         }
         function y() {
           e && (clearTimeout(e), (e = null));
@@ -233,14 +232,14 @@
             ((e = {
               performance_id: i(),
               session_id: s.sessionId,
-              tenant_id: o.TENANT_ID,
+              tenant_id: r.TENANT_ID,
               timestamp: new Date().toISOString(),
               connection_type: navigator.connection?.effectiveType || "unknown",
               ...e,
             }),
             (t = new XMLHttpRequest()).open(
               "POST",
-              o.API_BASE_URL + "/api/test-performance",
+              r.API_BASE_URL + "/api/test-performance",
               !0
             ),
             t.setRequestHeader("Content-Type", "application/json"),
@@ -253,7 +252,7 @@
             var e = e.sessionData,
               t = window.location.href,
               t = {
-                tenant_id: o.TENANT_ID,
+                tenant_id: r.TENANT_ID,
                 session_id: e.sessionId,
                 page_url: t,
                 is_first_visit: e.isFirstVisit,
@@ -268,8 +267,8 @@
             e = JSON.stringify(t);
             const d = new Blob([e]).size,
               u = new XMLHttpRequest(),
-              l = setTimeout(() => u.abort(), o.LOADING_TIMEOUT);
-            u.open("POST", o.API_BASE_URL + "/api/testdata", !0),
+              l = setTimeout(() => u.abort(), r.LOADING_TIMEOUT);
+            u.open("POST", r.API_BASE_URL + "/api/testdata", !0),
               u.setRequestHeader("Content-Type", "application/json"),
               (u.onreadystatechange = function () {
                 if (u.readyState === XMLHttpRequest.DONE)
@@ -282,30 +281,30 @@
                       i = ((_ = !0), performance.now());
                     if (t.success && t.assigned_variant) {
                       var s,
-                        r,
-                        o = t.assigned_variant;
+                        o,
+                        r = t.assigned_variant;
                       try {
                         if (
-                          (o.code &&
-                            o.code.trim() &&
+                          (r.code &&
+                            r.code.trim() &&
                             (((s = document.createElement("script")).type =
                               "text/javascript"),
-                            (s.text = o.code),
+                            (s.text = r.code),
                             document.head.appendChild(s)),
-                          o.event_script && o.event_script.trim())
+                          r.event_script && r.event_script.trim())
                         ) {
                           let e = !0;
                           (e = w() ? p.eventActive : e) &&
-                            (((r = document.createElement("script")).type =
+                            (((o = document.createElement("script")).type =
                               "text/javascript"),
-                            (r.text = o.event_script),
-                            document.head.appendChild(r));
+                            (o.text = r.event_script),
+                            document.head.appendChild(o));
                         }
                       } catch (e) {}
                     }
-                    var o = performance.now(),
-                      i = Math.round(o - i),
-                      a = Math.round(o - c);
+                    var r = performance.now(),
+                      i = Math.round(r - i),
+                      a = Math.round(r - c);
                     A({
                       test_id: t.test_id || null,
                       variant_id: t.assigned_variant?.id || null,
@@ -399,7 +398,7 @@
             (window.crowAI_utils.isTestMode = w()),
             !(-1 < window.location.href.indexOf("__crowai_disable__")))
           ) {
-            (e = new URL(o.ANALYTICS_SCRIPT_URL).origin),
+            (e = new URL(r.ANALYTICS_SCRIPT_URL).origin),
               ((i = document.createElement("link")).rel = "dns-prefetch"),
               (i.href = e),
               ((t = document.createElement("link")).rel = "preconnect"),
@@ -414,18 +413,18 @@
                 setTimeout(S, 0);
               });
               const s = history.pushState,
-                r =
+                o =
                   ((history.pushState = function () {
                     s.apply(history, arguments), setTimeout(S, 0);
                   }),
                   history.replaceState);
               history.replaceState = function () {
-                r.apply(history, arguments), setTimeout(S, 0);
+                o.apply(history, arguments), setTimeout(S, 0);
               };
             }
             !w() || p.eventActive
               ? (((n = document.createElement("script")).async = !0),
-                (n.src = o.ANALYTICS_SCRIPT_URL),
+                (n.src = r.ANALYTICS_SCRIPT_URL),
                 (n.onload = function () {
                   (a = !0), v("analytics-success");
                 }),
@@ -449,10 +448,10 @@
             getId: d,
             setId: u,
             getUserId: c,
-            getTenantId: () => o.TENANT_ID,
+            getTenantId: () => r.TENANT_ID,
             updateActivity: m,
             isValid: l,
-            generateId: r,
+            generateId: o,
             ensureSessionStructure: f,
             getCurrentSessionData: () => s,
             createSessionStructure: I,
