@@ -54,7 +54,7 @@
     <script>
       !(function () {
         "use strict";
-        const r = {
+        const o = {
           SESSION_TIMEOUT: 18e5,
           LOADING_TIMEOUT: 4e3,
           TENANT_ID: "nPF3zYLy3CPd5KFoVWJ8",
@@ -63,11 +63,11 @@
           ANALYTICS_SCRIPT_URL: "https://crowai-mi.web.app/m.js",
         };
         let a = !1,
-          _ = !1,
+          s = !1,
           t = !1,
           e = null,
-          s = null,
-          p = null,
+          r = null,
+          c = null,
           n = window.location.href;
         function i() {
           return "undefined" != typeof crypto && crypto.randomUUID
@@ -80,13 +80,13 @@
                 }
               );
         }
-        function w() {
-          return p && p.enabled;
+        function d() {
+          return c && c.enabled;
         }
-        function o() {
+        function u() {
           return Date.now() + "_" + i();
         }
-        function c() {
+        function l() {
           let t,
             n = !1;
           try {
@@ -98,30 +98,30 @@
           }
           return { userId: t, isFirstVisit: n };
         }
-        function d() {
+        function w() {
           try {
             return localStorage.getItem("ca_sid");
           } catch (e) {
             return window._crowAI_sessionId;
           }
         }
-        function u(t) {
+        function I(t) {
           try {
             localStorage.setItem("ca_sid", t);
           } catch (e) {
             window._crowAI_sessionId = t;
           }
         }
-        function l() {
+        function _() {
           try {
             var e = localStorage.getItem("ca_sid"),
               t = localStorage.getItem("ca_act");
-            return e ? !!t && Date.now() - parseInt(t) < r.SESSION_TIMEOUT : !1;
+            return e ? !!t && Date.now() - parseInt(t) < o.SESSION_TIMEOUT : !1;
           } catch (e) {
             return !1;
           }
         }
-        function m() {
+        function p() {
           var t = Date.now();
           try {
             localStorage.setItem("ca_act", t.toString());
@@ -129,63 +129,63 @@
             window._crowAI_lastActivity = t;
           }
         }
-        function I() {
-          var e = o(),
-            { userId: t, isFirstVisit: n } = c(),
+        function m() {
+          var e = u(),
+            { userId: t, isFirstVisit: n } = l(),
             i = {
               session_id: e,
               user_id: t,
-              tenant_id: r.TENANT_ID,
+              tenant_id: o.TENANT_ID,
               first_visit: n,
               screen_resolution: screen.width + "x" + screen.height,
               page_url: window.location.href,
             };
           return (
-            (s = {
+            (r = {
               sessionId: e,
               userId: t,
-              tenantId: r.TENANT_ID,
+              tenantId: o.TENANT_ID,
               isFirstVisit: n,
               screenResolution: screen.width + "x" + screen.height,
               createdAt: Date.now(),
               apiPayload: i,
             }),
-            u(e),
-            m(),
-            s
+            I(e),
+            p(),
+            r
           );
         }
         function f() {
           var e, t, n;
-          return s
-            ? (m(),
-              (s.apiPayload.page_url = window.location.href),
-              { success: !0, sessionData: s })
-            : ((e = d()),
-              (t = l()),
+          return r
+            ? (p(),
+              (r.apiPayload.page_url = window.location.href),
+              { success: !0, sessionData: r })
+            : ((e = w()),
+              (t = _()),
               e && t
-                ? (m(),
-                  ({ userId: t, isFirstVisit: n } = c()),
+                ? (p(),
+                  ({ userId: t, isFirstVisit: n } = l()),
                   {
                     success: !0,
-                    sessionData: (s = {
+                    sessionData: (r = {
                       sessionId: e,
                       userId: t,
-                      tenantId: r.TENANT_ID,
+                      tenantId: o.TENANT_ID,
                       isFirstVisit: n,
                       screenResolution: screen.width + "x" + screen.height,
                       createdAt: Date.now(),
                       apiPayload: {
                         session_id: e,
                         user_id: t,
-                        tenant_id: r.TENANT_ID,
+                        tenant_id: o.TENANT_ID,
                         first_visit: n,
                         screen_resolution: screen.width + "x" + screen.height,
                         page_url: window.location.href,
                       },
                     }),
                   })
-                : { success: !0, sessionData: I() });
+                : { success: !0, sessionData: m() });
         }
         function h() {
           var e, t;
@@ -196,7 +196,7 @@
               "crowai-antiflicker"
             ),
             e.setAttribute("type", "text/css"),
-            (t = r.HIDE_ELEMENTS.map(
+            (t = o.HIDE_ELEMENTS.map(
               (e) =>
                 e +
                 " { opacity: 0 !important; visibility: hidden !important; transition: none !important; }"
@@ -208,177 +208,92 @@
         }
         function T() {
           e = setTimeout(function () {
-            (a = a || !0), (_ = _ || !0), g();
-          }, r.LOADING_TIMEOUT);
+            (a = a || !0), (s = s || !0), v();
+          }, o.LOADING_TIMEOUT);
         }
-        function y() {
+        function A() {
           e && (clearTimeout(e), (e = null));
         }
-        function v(e) {
-          w() ? _ && !t && g() : a && _ && !t && g();
+        function g(e) {
+          d() ? s && !t && v() : a && s && !t && v();
         }
-        function g() {
+        function v() {
           var e;
           t ||
             ((t = !0),
-            y(),
+            A(),
             (e = document.getElementById("crowai-antiflicker")) &&
               e.parentNode &&
               e.parentNode.removeChild(e));
         }
-        function A(e) {
-          var t;
-          s &&
-            ((e = {
-              performance_id: i(),
-              session_id: s.sessionId,
-              tenant_id: r.TENANT_ID,
-              timestamp: new Date().toISOString(),
-              connection_type: navigator.connection?.effectiveType || "unknown",
-              ...e,
-            }),
-            (t = new XMLHttpRequest()).open(
-              "POST",
-              r.API_BASE_URL + "/api/test-performance",
-              !0
-            ),
-            t.setRequestHeader("Content-Type", "application/json"),
-            t.setRequestHeader("Accept", "application/json"),
-            t.send(JSON.stringify(e)));
-        }
-        function x() {
+        function y() {
           var e = f();
           if (e.success) {
             var e = e.sessionData,
               t = window.location.href,
               t = {
-                tenant_id: r.TENANT_ID,
+                tenant_id: o.TENANT_ID,
                 session_id: e.sessionId,
                 page_url: t,
                 is_first_visit: e.isFirstVisit,
               };
-            w() &&
+            d() &&
               ((t.test_mode = !0),
-              p.testId && (t.test_id = p.testId),
-              p.variantId && (t.variant_id = p.variantId),
-              p.eventActive) &&
+              c.testId && (t.test_id = c.testId),
+              c.variantId && (t.variant_id = c.variantId),
+              c.eventActive) &&
               (t.event_active = !0);
-            const c = performance.now();
-            e = JSON.stringify(t);
-            const d = new Blob([e]).size,
-              u = new XMLHttpRequest(),
-              l = setTimeout(() => u.abort(), r.LOADING_TIMEOUT);
-            u.open("POST", r.API_BASE_URL + "/api/testdata", !0),
-              u.setRequestHeader("Content-Type", "application/json"),
-              (u.onreadystatechange = function () {
-                if (u.readyState === XMLHttpRequest.DONE)
-                  if ((clearTimeout(l), 200 <= u.status && u.status < 300)) {
-                    var e = performance.now(),
-                      e = Math.round(e - c),
-                      t = u.responseText,
-                      n = new Blob([t]).size,
-                      t = JSON.parse(t),
-                      i = ((_ = !0), performance.now());
-                    if (t.success && t.assigned_variant) {
-                      var s,
-                        o,
-                        r = t.assigned_variant;
+            const i = new XMLHttpRequest(),
+              r = setTimeout(() => i.abort(), o.LOADING_TIMEOUT);
+            i.open("POST", o.API_BASE_URL + "/api/testdata", !0),
+              i.setRequestHeader("Content-Type", "application/json"),
+              (i.onreadystatechange = function () {
+                if (i.readyState === XMLHttpRequest.DONE)
+                  if ((clearTimeout(r), 200 <= i.status && i.status < 300)) {
+                    var t = JSON.parse(i.responseText);
+                    if (((s = !0), t.success && t.assigned_variant)) {
+                      var e,
+                        n,
+                        t = t.assigned_variant;
                       try {
                         if (
-                          (r.code &&
-                            r.code.trim() &&
-                            (((s = document.createElement("script")).type =
+                          (t.code &&
+                            t.code.trim() &&
+                            (((e = document.createElement("script")).type =
                               "text/javascript"),
-                            (s.text = r.code),
-                            document.head.appendChild(s)),
-                          r.event_script && r.event_script.trim())
+                            (e.text = t.code),
+                            document.head.appendChild(e)),
+                          t.event_script && t.event_script.trim())
                         ) {
                           let e = !0;
-                          (e = w() ? p.eventActive : e) &&
-                            (((o = document.createElement("script")).type =
+                          (e = d() ? c.eventActive : e) &&
+                            (((n = document.createElement("script")).type =
                               "text/javascript"),
-                            (o.text = r.event_script),
-                            document.head.appendChild(o));
+                            (n.text = t.event_script),
+                            document.head.appendChild(n));
                         }
                       } catch (e) {}
                     }
-                    var r = performance.now(),
-                      i = Math.round(r - i),
-                      a = Math.round(r - c);
-                    A({
-                      test_id: t.test_id || null,
-                      variant_id: t.assigned_variant?.id || null,
-                      api_response_time: e,
-                      test_execution_time: i,
-                      total_time: a,
-                      request_payload_size: d,
-                      response_payload_size: n,
-                      success: !0,
-                      error_message: null,
-                    }),
-                      v("abtest-success");
-                  } else {
-                    _ = !0;
-                    (t = performance.now()), (e = Math.round(t - c));
-                    A({
-                      test_id: null,
-                      variant_id: null,
-                      api_response_time: e,
-                      test_execution_time: 0,
-                      total_time: e,
-                      request_payload_size: d,
-                      response_payload_size: 0,
-                      success: !1,
-                      error_message: `HTTP ${u.status}: ` + u.statusText,
-                    }),
-                      v("abtest-error");
-                  }
+                    g("abtest-success");
+                  } else (s = !0), g("abtest-error");
               }),
-              (u.onerror = function () {
-                clearTimeout(l), (_ = !0);
-                var e = performance.now(),
-                  e = Math.round(e - c);
-                A({
-                  test_id: null,
-                  variant_id: null,
-                  api_response_time: e,
-                  test_execution_time: 0,
-                  total_time: e,
-                  request_payload_size: d,
-                  response_payload_size: 0,
-                  success: !1,
-                  error_message: "Network error",
-                }),
-                  v("abtest-error");
+              (i.onerror = function () {
+                clearTimeout(r), (s = !0), g("abtest-error");
               }),
-              (u.onabort = function () {
-                clearTimeout(l), (_ = !0);
-                var e = performance.now(),
-                  e = Math.round(e - c);
-                A({
-                  test_id: null,
-                  variant_id: null,
-                  api_response_time: e,
-                  test_execution_time: 0,
-                  total_time: e,
-                  request_payload_size: d,
-                  response_payload_size: 0,
-                  success: !1,
-                  error_message: "Request timeout",
-                }),
-                  v("abtest-error");
+              (i.onabort = function () {
+                clearTimeout(r), (s = !0), g("abtest-error");
               }),
-              u.send(e);
-          } else (_ = !0), v("session-error");
+              i.send(JSON.stringify(t));
+          } else (s = !0), g("session-error");
         }
-        function S() {
+        function x() {
           var e = window.location.href;
-          e !== n && ((n = e), (_ = !1), (t = !1), h(), y(), T(), m(), x());
+          e !== n && ((n = e), (s = !1), (t = !1), h(), A(), T(), p(), y());
         }
         function E() {
           var e, t, n, i;
           if (
-            ((p =
+            ((c =
               ((e =
                 "true" ===
                 (n = new URLSearchParams(window.location.search)).get(
@@ -395,10 +310,10 @@
                     variantId: null,
                     eventActive: !1,
                   })),
-            (window.crowAI_utils.isTestMode = w()),
+            (window.crowAI_utils.isTestMode = d()),
             !(-1 < window.location.href.indexOf("__crowai_disable__")))
           ) {
-            (e = new URL(r.ANALYTICS_SCRIPT_URL).origin),
+            (e = new URL(o.ANALYTICS_SCRIPT_URL).origin),
               ((i = document.createElement("link")).rel = "dns-prefetch"),
               (i.href = e),
               ((t = document.createElement("link")).rel = "preconnect"),
@@ -406,35 +321,34 @@
               (e = document.getElementsByTagName("head")[0]) &&
                 (e.appendChild(i), e.appendChild(t)),
               h(),
-              T(),
-              f();
+              T();
             {
               window.addEventListener("popstate", function (e) {
-                setTimeout(S, 0);
+                setTimeout(x, 0);
               });
-              const s = history.pushState,
-                o =
+              const r = history.pushState,
+                s =
                   ((history.pushState = function () {
-                    s.apply(history, arguments), setTimeout(S, 0);
+                    r.apply(history, arguments), setTimeout(x, 0);
                   }),
                   history.replaceState);
               history.replaceState = function () {
-                o.apply(history, arguments), setTimeout(S, 0);
+                s.apply(history, arguments), setTimeout(x, 0);
               };
             }
-            !w() || p.eventActive
+            !d() || c.eventActive
               ? (((n = document.createElement("script")).async = !0),
-                (n.src = r.ANALYTICS_SCRIPT_URL),
+                (n.src = o.ANALYTICS_SCRIPT_URL),
                 (n.onload = function () {
-                  (a = !0), v("analytics-success");
+                  (a = !0), g("analytics-success");
                 }),
                 (n.onerror = function () {
-                  (a = !0), v("analytics-error");
+                  (a = !0), g("analytics-error");
                 }),
                 (i = document.getElementsByTagName("head")[0]) &&
                   i.appendChild(n))
-              : ((a = !0), v("analytics-skipped-no-events")),
-              x();
+              : ((a = !0), g("analytics-skipped-no-events")),
+              y();
           }
         }
         (window.crowAI_utils = window.crowAI_utils || {}),
@@ -445,28 +359,28 @@
               (window.crowAI.q = window.crowAI.q || []).push(arguments);
             }),
           (window.crowAI.session = {
-            getId: d,
-            setId: u,
-            getUserId: c,
-            getTenantId: () => r.TENANT_ID,
-            updateActivity: m,
-            isValid: l,
-            generateId: o,
+            getId: w,
+            setId: I,
+            getUserId: l,
+            getTenantId: () => o.TENANT_ID,
+            updateActivity: p,
+            isValid: _,
+            generateId: u,
             ensureSessionStructure: f,
-            getCurrentSessionData: () => s,
-            createSessionStructure: I,
+            getCurrentSessionData: () => r,
+            createSessionStructure: m,
           }),
           (window.crowAI.loading = {
             isFinished: () => t,
             isAnalyticsLoaded: () => a,
-            isAbTestLoaded: () => _,
-            finish: () => g(),
+            isAbTestLoaded: () => s,
+            finish: () => v(),
           }),
           (window.crowAI.test = {
-            loadVariant: x,
+            loadVariant: y,
             getCurrentVariant: () => window.crowAI.currentVariant,
-            isTestMode: w,
-            getTestConfig: () => p,
+            isTestMode: d,
+            getTestConfig: () => c,
           }),
           "loading" === document.readyState
             ? document.addEventListener("DOMContentLoaded", E)
